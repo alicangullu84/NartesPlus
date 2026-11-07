@@ -291,6 +291,7 @@ main { flex: 1; min-width: 0; overflow: auto; padding: 1.2rem 1.15rem 3rem; }
 .step.is-locked, .exercise.is-locked, .locked-card { background: #f7f3ee; color: var(--muted); box-shadow: none; }
 .kicker { display: flex; justify-content: space-between; gap: 0.6rem; align-items: center; margin-bottom: 0.35rem; }
 .badge { border-radius: 999px; padding: 0.05rem 0.55rem; background: #efe6dc; color: var(--muted); font-size: 0.82rem; font-weight: 700; }
+.badge.lock { display: inline-flex; align-items: center; justify-content: center; width: 1.7rem; height: 1.7rem; padding: 0; }
 .badge.ok { background: #e5f6f3; color: var(--teal); }
 .badge.wait { background: var(--cream); color: var(--accent-strong); }
 

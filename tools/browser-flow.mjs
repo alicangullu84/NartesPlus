@@ -84,6 +84,9 @@ async function main() {
     };
     document.getElementById("video-note").click();
     out.video = document.getElementById("video-msg").hidden === false && document.getElementById("video-note").textContent;
+    out.retry = document.body.innerText.includes("Yeniden dene");
+    var locked = document.querySelector("#adim-3 .badge.lock");
+    out.lock = locked ? { label: locked.getAttribute("aria-label"), text: locked.textContent.trim(), svg: Boolean(locked.querySelector("svg")) } : null;
     return out;
   })()`);
   console.log(JSON.stringify(flow, null, 2));
@@ -97,7 +100,8 @@ async function main() {
     flow.order[0] === "pair" && flow.order[2] === "pair" &&
     flow.afterWrong.stillTwo === 2 && flow.afterWrong.step2locked &&
     flow.afterSecond.filled === "çarpanları" && flow.afterSecond.step2.includes("is-active") &&
-    flow.video && flow.topics === 12 && flow.lockedPreview;
+    flow.video && flow.topics === 12 && flow.lockedPreview &&
+    flow.retry === false && flow.lock && flow.lock.label === "Kilitli" && flow.lock.text === "" && flow.lock.svg;
   if (!ok) process.exit(1);
 }
 

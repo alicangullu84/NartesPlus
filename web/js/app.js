@@ -30,6 +30,10 @@
   var openBlank = null;
   window.NARTES_UI = "iki-secenek";
 
+  function lockMark() {
+    return '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><path fill="currentColor" d="M17 9h-1V7a4 4 0 0 0-8 0v2H7a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2zm-3 0h-4V7a2 2 0 1 1 4 0v2z"/></svg>';
+  }
+
   function esc(value) {
     return String(value == null ? "" : value)
       .replace(/&/g, "&amp;")
@@ -371,9 +375,11 @@
       var open = stepOpen(saved, index);
       var item = saved.steps[index];
       var stateClass = item.solved ? "is-solved" : open ? "is-active" : "is-locked";
-      var badge = item.solved ? "Doğru" : open ? "Sıradaki" : "Kilitli";
+      var badge = item.solved ? "Doğru" : open ? "Sıradaki" : lockMark();
+      var badgeClass = item.solved ? "badge ok" : open ? "badge wait" : "badge lock";
+      var badgeName = !item.solved && !open ? ' role="img" aria-label="Kilitli"' : "";
       html += '<li class="step ' + stateClass + '" id="adim-' + (index + 1) + '"><div class="kicker"><h2>Adım ' + (index + 1) +
-        '</h2><span class="badge ' + (item.solved ? "ok" : open ? "wait" : "") + '">' + badge + "</span></div>";
+        '</h2><span class="' + badgeClass + '"' + badgeName + ">" + badge + "</span></div>";
       var talk = spoken.steps[index];
       if (!open) {
         html += '<p class="prompt is-waiting">' + esc(talk.prompt.replace(/□/g, "______")) + "</p>";
@@ -381,8 +387,7 @@
       } else {
         html += '<p class="step-lead">' + esc(talk.lead) + "</p>";
         html += '<p class="prompt">' + promptHtml(talk.prompt, talk.answers, item, "step", index) + "</p>";
-        html += '<p class="hint-line">Boşluğa dokun. Hemen üstünde ve altında iki seçenek çıkar; doğru olanı seç.</p>';
-        if (item.solved) html += '<div class="actions"><button class="ghost" type="button" data-retry="step" data-index="' + index + '">Yeniden dene</button></div>';
+        if (!item.solved) html += '<p class="hint-line">Boşluğa dokun. Hemen üstünde ve altında iki seçenek çıkar; doğru olanı seç.</p>';
         html += feedbackHtml(item, talk.hint, talk.explain);
       }
       html += "</li>";
@@ -408,8 +413,11 @@
       var open = exerciseOpen(saved, index);
       var item = saved.exercises[index];
       var stateClass = item.solved ? "is-solved" : open ? "is-active" : "is-locked";
+      var exerciseBadge = item.solved ? "Doğru" : open ? "Sıradaki" : lockMark();
+      var exerciseClass = item.solved ? "badge ok" : open ? "badge wait" : "badge lock";
+      var exerciseName = !item.solved && !open ? ' role="img" aria-label="Kilitli"' : "";
       html += '<li class="exercise ' + stateClass + '"><div class="kicker"><h3>Alıştırma ' + (index + 1) +
-        '</h3><span class="badge ' + (item.solved ? "ok" : "") + '">' + (item.solved ? "Doğru" : open ? "Sıradaki" : "Kilitli") + "</span></div>";
+        '</h3><span class="' + exerciseClass + '"' + exerciseName + ">" + exerciseBadge + "</span></div>";
       if (!open) {
         var waiting = !saved.steps[saved.steps.length - 1].solved
           ? "Önce üç adımı doğru tamamla. Sonra alıştırmalar senin."
@@ -464,17 +472,6 @@
       save();
       render();
       reveal("adim-1");
-    });
-    mainEl.querySelectorAll("[data-retry]").forEach(function (button) {
-      button.addEventListener("click", function () {
-        var index = Number(button.getAttribute("data-index"));
-        saved.steps[index].solved = false;
-        saved.steps[index].wrong = 0;
-        saved.steps[index].last = null;
-        save();
-        openBlank = null;
-        render();
-      });
     });
     var video = document.getElementById("video-note");
     var videoMsg = document.getElementById("video-msg");
