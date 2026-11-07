@@ -1,0 +1,22 @@
+# Sistem
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editör
+.vscode/
+.idea/
+
+# Python
+__pycache__/
+.venv/
+venv/
+
+# Ortam ve sırlar
+.env
+.env.*
+!.env.example
+
+# Geçici
+*.tmp
+*.log
