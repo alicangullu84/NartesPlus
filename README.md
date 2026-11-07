@@ -10,7 +10,7 @@ Dosyayı tarayıcıda açın (çift tıklama veya `file://` adresi yeter). Sol m
 
 Renkler `web/css/site.css` dosyasının başındaki değişkenlerdedir (`--bg`, `--sidebar`, `--text`, `--accent`, `--progress-start`, `--progress-done`). Paleti değiştirmek için bu satırlar yeter.
 
-GitHub Pages kullanılacaksa yayın klasörü `/web` olmalıdır. Bu depo canlı bir adres açmaz.
+GitHub Pages iş akışı `.github/workflows/pages.yml` dosyasındadır ve `web/` klasörünü yayınlar. Kaynak olarak **GitHub Actions** seçilmelidir. Depo özel olduğu sürece Pages, hesap planı buna izin veriyorsa açılır; ücretsiz planda deponun herkese açık olması gerekir.
 
 ## İçerik kaynağı
 
