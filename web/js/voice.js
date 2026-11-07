@@ -24,9 +24,9 @@
 
   var PROMPTS = {
     "1.1": [
+      "Bir sayıyı kalansız bölebilen sayılar o sayının □.",
       "14 nesneyi yedişer ayırırsan kaç grup görürsün? □",
-      "14 = 7 × □ olduğuna göre eksik çarpanı sen yaz.",
-      "14 ÷ 7 işleminde kalan □. Çarpanın diğer adı □."
+      "14 ÷ 7 bölmesinde kalan □. Bu yüzden 7, 14’ün bir □dir."
     ],
     "1.2": [
       "İki tane 5’lik çubuğu ucuca eklersen uzunluk □ birim olur.",
@@ -120,9 +120,9 @@
 
   function lead(id, index) {
     var sets = [
-      ["Şimdi sen dene.", "Aynı fikri bir adım daha götür.", "Bunu da sen bitir."],
-      ["Modele bak, acele etme.", "Devam edelim.", "Son hükmü sen ver."],
-      ["Kalemini düşünerek doldur.", "Bir bağlantı daha kur.", "Artık kuralı sen söyle."]
+      ["Gel, beraber bakalım.", "Dur, bir de şunu sorayım.", "Şimdi kuralı sen söyle."],
+      ["Şöyle düşün, acele etme.", "Aynısını bir kez daha kur.", "Bunu da sen bitir."],
+      ["Modele bak, sonra seç.", "Bir bağlantı daha var.", "Kararını ver, ben yanındayım."]
     ];
     var bucket = 0;
     for (var i = 0; i < id.length; i += 1) bucket += id.charCodeAt(i);
@@ -139,17 +139,36 @@
     return out;
   }
 
+  var ANSWERS = {
+    "1.1": [
+      ["çarpanları"],
+      null,
+      ["0", "çarpanı"]
+    ]
+  };
+
+  function answersFor(leaf, step, index) {
+    var custom = ANSWERS[leaf.id] && ANSWERS[leaf.id][index];
+    if (custom && custom.length === step.answers.length) return custom;
+    return step.answers;
+  }
+
   function speak(leaf) {
     return {
       gold: GOLD[leaf.id] || "",
       goal: "Bu yaprakta senden şunu istiyorum: " + leaf.goal.charAt(0).toLocaleLowerCase("tr-TR") + leaf.goal.slice(1),
       steps: leaf.steps.map(function (step, index) {
         var prompt = promptFor(leaf, step, index);
+        var answers = answersFor(leaf, step, index);
+        var hint = leaf.id === "1.1" && index === 0
+          ? "Bir kez daha bak. Kalansız bölen çarpandır. Kat, o sayıdan büyük olan sayıdır."
+          : "Bir kez daha bak. " + step.hint;
         return {
           lead: lead(leaf.id, index),
           prompt: prompt,
-          hint: "Bir kez daha bak. " + step.hint,
-          explain: "Beraber netleştirelim. " + step.hint + " Cümle şöyle durur: " + fill(prompt, step.answers)
+          answers: answers,
+          hint: hint,
+          explain: "Beraber netleştirelim. " + hint.replace(/^Bir kez daha bak\. /, "") + " Cümle şöyle durur: " + fill(prompt, answers)
         };
       })
     };
