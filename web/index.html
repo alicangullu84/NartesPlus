@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,560;9..144,680&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/site.css">
+  <link rel="stylesheet" href="css/site.css?v=10">
 </head>
 <body>
   <a class="skip" href="#icerik">İçeriğe geç</a>
@@ -32,13 +32,31 @@
     </main>
   </div>
   <div id="live" class="live" aria-live="polite"></div>
+  <div id="answer-sheet" class="answer-sheet" hidden>
+    <div class="answer-card" role="dialog" aria-modal="false" aria-labelledby="sheet-title">
+      <p class="sheet-kicker" id="sheet-title">Cevabın</p>
+      <p class="sheet-ask" id="sheet-ask"></p>
+      <div class="sheet-choices" id="sheet-choices"></div>
+      <label class="sheet-field">
+        <span>Yaz veya tuşla</span>
+        <input id="sheet-input" autocomplete="off" spellcheck="false" enterkeyhint="done">
+      </label>
+      <div class="sheet-keypad" id="sheet-keypad" hidden></div>
+      <p class="sheet-feedback" id="sheet-feedback"></p>
+      <div class="sheet-actions">
+        <button type="button" class="ghost" id="sheet-close">Kapat</button>
+        <button type="button" class="primary" id="sheet-ok">Kontrol et</button>
+      </div>
+    </div>
+  </div>
   <noscript>
     <p class="noscript">Adımlar için JavaScript açık olmalı. Hesap veya sunucu gerekmez.</p>
   </noscript>
-  <script src="js/check.js"></script>
-  <script src="js/lesson-data.js"></script>
-  <script src="js/diagrams.js"></script>
-  <script src="js/visuals.js"></script>
-  <script src="js/app.js"></script>
+  <script src="js/check.js?v=10"></script>
+  <script src="js/lesson-data.js?v=10"></script>
+  <script src="js/diagrams.js?v=10"></script>
+  <script src="js/visuals.js?v=10"></script>
+  <script src="js/voice.js?v=10"></script>
+  <script src="js/app.js?v=10"></script>
 </body>
 </html>

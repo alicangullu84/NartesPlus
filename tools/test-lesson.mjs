@@ -63,7 +63,10 @@ const cases = [
   ["48", "16×3=48", true],
   ["47", "16×3=48", false],
   ["Evet, 16/4=4, kalan 0", "Evet; 16÷4=4, kalan 0.", true],
-  ["123", "1,2,3", false]
+  ["123", "1,2,3", false],
+  ["2 grup", "2", true],
+  ["iki", "2", true],
+  ["12", "2", false]
 ];
 for (const [given, expected, ok] of cases) {
   const result = check.judgeBlank(given, expected, {});

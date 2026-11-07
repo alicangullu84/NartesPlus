@@ -20,6 +20,7 @@
 
   function prep(value) {
     var text = trLower(value).trim();
+    text = text.replace(/[\u200b\u200c\u200d\ufeff\u00a0]/g, " ");
     text = text.replace(/[’'"]/g, "");
     text = text.replace(/²/g, "^2").replace(/³/g, "^3").replace(/⁴/g, "^4");
     text = text.replace(/⁵/g, "^5").replace(/⁶/g, "^6").replace(/⁷/g, "^7");
@@ -148,9 +149,23 @@
     return hit / expectedWords.length >= 0.6;
   }
 
+  function numberWord(value) {
+    var words = {
+      sifir: "0", bir: "1", iki: "2", uc: "3", dort: "4", bes: "5",
+      alti: "6", yedi: "7", sekiz: "8", dokuz: "9", on: "10"
+    };
+    return words[tight(value)] || null;
+  }
+
   function judgeBlank(given, expected, options) {
     var opts = options || {};
     if (!String(given || "").trim()) return { ok: false, reason: "empty" };
+    var spoken = numberWord(given);
+    if (spoken && tight(spoken) === tight(expected)) return { ok: true, reason: "ok" };
+    if (/^\d+$/.test(tight(expected))) {
+      var lone = numbersOf(given);
+      if (lone.length === 1 && lone[0] === String(Number(tight(expected)))) return { ok: true, reason: "ok" };
+    }
     if (tight(given) === tight(expected)) return { ok: true, reason: "ok" };
     if (synonym(given) === synonym(expected)) return { ok: true, reason: "ok" };
     if (squashOk(given, expected)) return { ok: true, reason: "ok" };

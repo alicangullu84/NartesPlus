@@ -27,7 +27,8 @@
   var state = load();
   var review = false;
   var route = { leaf: "1.1" };
-  var focusId = "";
+  var sheet = null;
+  window.NARTES_UI = "ogretmen-4";
 
   function esc(value) {
     return String(value == null ? "" : value)
@@ -220,11 +221,6 @@
     if (route.soon) renderSoon(data.topics[route.topic - 1]);
     else if (route.overview) renderOverview();
     else renderLeaf(leaves[route.leaf]);
-    if (focusId) {
-      var field = document.getElementById(focusId);
-      if (field) field.focus();
-      focusId = "";
-    }
   }
 
   function renderOverview() {
@@ -262,25 +258,26 @@
     return !!(saved.exercises[index].unlocked || saved.exercises[index].solved || saved.exercises[index - 1].solved);
   }
 
-  function fieldHtml(answer, index, value, item, prefix) {
-    var wide = String(answer).length > 18;
-    var numeric = /^\d+$/.test(String(answer).trim());
-    var cls = "";
-    if (item.solved || (item.last && item.last[index] && item.last[index].ok)) cls = "is-ok";
-    if (item.last && item.last[index] && !item.last[index].ok) cls = "is-bad";
-    var size = Math.min(22, Math.max(3, String(answer).length + 1));
-    return '<label class="blank' + (wide ? " wide" : "") + '"><span class="blank-name">Boşluk ' + (index + 1) +
-      '</span><input id="' + prefix + "-" + index + '" value="' + esc(value || "") + '" size="' + size + '" class="' + cls + '"' +
-      (numeric ? ' inputmode="numeric"' : "") + (item.solved ? " readonly" : "") +
-      ' autocomplete="off" spellcheck="false" aria-label="Boşluk ' + (index + 1) + '"></label>';
+  function blankButton(answer, value, item, kind, stepIndex, blankIndex) {
+    var filled = String(value || "").trim();
+    var cls = "blank-spot";
+    if (!filled) cls += " is-empty";
+    if (item.solved || (item.last && item.last[blankIndex] && item.last[blankIndex].ok)) cls += " is-ok";
+    if (item.last && item.last[blankIndex] && !item.last[blankIndex].ok) cls += " is-bad";
+    var label = kind === "exercise" ? "Cevabın" : "Boşluk " + (blankIndex + 1);
+    return '<button type="button" class="' + cls + '" data-blank="1" data-kind="' + kind + '" data-step="' + stepIndex +
+      '" data-slot="' + blankIndex + '"' + (item.solved ? " disabled" : "") + '><span class="blank-name">' + label +
+      '</span><span class="blank-value">' + esc(filled || "dokun") + "</span></button>";
   }
 
-  function promptHtml(prompt, answers, item, prefix) {
+  function promptHtml(prompt, answers, item, kind, stepIndex) {
     var parts = prompt.split("□");
     var html = "";
     parts.forEach(function (part, index) {
       html += esc(part);
-      if (index < answers.length) html += fieldHtml(answers[index], index, (item.values || [])[index], item, prefix);
+      if (index < answers.length) {
+        html += blankButton(answers[index], (item.values || [])[index], item, kind, stepIndex, index);
+      }
     });
     return html;
   }
@@ -293,8 +290,8 @@
     else if (reasons.indexOf("extra") !== -1) extra = "Listede fazla eleman var. ";
     else if (reasons.indexOf("order") !== -1) extra = "Sıralama istenen yönde olmalı. ";
     else if (reasons.indexOf("empty") !== -1) extra = "Bütün boşlukları doldur. ";
-    if (item.wrong === 1) return '<p class="feedback hint"><strong>İpucu.</strong> ' + esc(extra + hint) + "</p>";
-    return '<p class="feedback explain"><strong>Kısa açıklama.</strong> ' + esc(extra + explain) + "</p>";
+    if (item.wrong === 1) return '<p class="feedback hint"><strong>Bir kez daha bak.</strong> ' + esc(extra + hint) + "</p>";
+    return '<p class="feedback explain"><strong>Beraber netleştirelim.</strong> ' + esc(extra + explain) + "</p>";
   }
 
   function renderLeaf(leaf) {
@@ -304,8 +301,10 @@
     var figure = visual.render(diagram, solvedSteps);
     var html = '<article class="sheet">';
     html += '<p class="crumb">Çarpanlar ve Katlar · ' + esc(leaf.sectionId) + ". " + esc(leaf.sectionTitle) + "</p>";
+    var spoken = NartesVoice.speak(leaf);
     html += "<h1>" + esc(leaf.id) + " " + esc(leaf.title) + "</h1>";
-    html += '<p class="goal">' + esc(leaf.goal) + "</p>";
+    html += '<p class="goal">' + esc(spoken.goal) + "</p>";
+    if (spoken.gold) html += '<p class="gold">' + esc(spoken.gold) + "</p>";
     html += '<p class="meta">Kazanım ' + esc(leaf.kazanım) + " · Ön bilgi: " + esc(leaf.prior) + "</p>";
     html += '<div class="tools"><button type="button" class="ghost" id="review" aria-pressed="' + (review ? "true" : "false") + '">' +
       (review ? "Adım adım kilide dön" : "Tüm adımları göster") + "</button></div>";
@@ -320,15 +319,14 @@
       html += '<li class="step ' + stateClass + '" id="adim-' + (index + 1) + '"><div class="kicker"><h2>Adım ' + (index + 1) +
         '</h2><span class="badge ' + (item.solved ? "ok" : open ? "wait" : "") + '">' + badge + "</span></div>";
       if (!open) {
-        html += "<p>Bu adım, önceki cevap doğru olunca açılır.</p>";
+        html += "<p>Bu adım kilitli. Üstteki doğru olunca açılır; o zaman sıra sende.</p>";
       } else {
-        html += '<form data-kind="step" data-index="' + index + '"><p class="prompt">' +
-          promptHtml(step.prompt, step.answers, item, "s" + index) + "</p>";
-        html += '<p class="hint-line">Tüm boşluklar birlikte kontrol edilir.</p>';
-        if (!item.solved) html += '<div class="actions"><button class="primary" type="submit">Kontrol et</button></div>';
-        else html += '<div class="actions"><button class="ghost" type="button" data-retry="step" data-index="' + index + '">Yeniden dene</button></div>';
-        html += feedbackHtml(item, step.hint, step.explain);
-        html += "</form>";
+        var talk = spoken.steps[index];
+        html += '<p class="step-lead">' + esc(talk.lead) + "</p>";
+        html += '<p class="prompt">' + promptHtml(talk.prompt, step.answers, item, "step", index) + "</p>";
+        html += '<p class="hint-line">Boşluğa dokun. Küçük pencereden yaz veya bir seçeneğe bas.</p>';
+        if (item.solved) html += '<div class="actions"><button class="ghost" type="button" data-retry="step" data-index="' + index + '">Yeniden dene</button></div>';
+        html += feedbackHtml(item, talk.hint, talk.explain);
       }
       html += "</li>";
     });
@@ -336,11 +334,12 @@
 
     html += '<section class="block"><h2>Çalışılmış örnekler</h2>';
     if (!examplesOpen(saved)) {
-      html += '<p class="locked-card">Üç adım doğru olunca örnekler açılır.</p>';
+      html += '<p class="locked-card">Üç adımı da doğru yapınca çözülmüş örnekleri birlikte okuyacağız.</p>';
     } else {
       html += '<div class="examples">';
       leaf.examples.forEach(function (example, index) {
-        html += '<article class="example"><h3>Örnek ' + (index + 1) + "</h3><p>" + esc(example) + "</p></article>";
+        var intro = index === 0 ? "Birinci örneği birlikte okuyalım. " : "İkinci örnek de aynı fikri pekiştirir. ";
+        html += '<article class="example"><h3>Örnek ' + (index + 1) + "</h3><p>" + esc(intro + example) + "</p></article>";
       });
       html += "</div>";
       if (!saved.examplesSeen) html += '<div class="actions"><button type="button" class="primary" id="seen">Alıştırmalara geç</button></div>';
@@ -356,22 +355,17 @@
         '</h3><span class="badge ' + (item.solved ? "ok" : "") + '">' + (item.solved ? "Doğru" : open ? "Sıradaki" : "Kilitli") + "</span></div>";
       if (!open) {
         var waiting = !saved.steps[saved.steps.length - 1].solved
-          ? "Üç adım doğru olunca açılır."
+          ? "Önce üç adımı doğru tamamla. Sonra alıştırmalar senin."
           : !saved.examplesSeen
-            ? "Örnekler incelenince açılır."
-            : "Önceki alıştırma doğru olunca açılır.";
+            ? "Örnekleri birlikte okuyunca alıştırmaya geçeriz."
+            : "Önceki alıştırma doğru olunca bu da açılır.";
         html += "<p>" + waiting + "</p>";
-      }
-      else {
-        var hint = leaf.mistakes[0] || "Görsel modele ve koşullara yeniden bak.";
-        var explain = leaf.mistakes.join(" ") + " Kontrol: " + exercise.answerText;
-        html += '<form data-kind="exercise" data-index="' + index + '"><p>' + esc(exercise.question) + "</p>";
-        html += '<label class="blank wide"><span class="blank-name">Cevabın</span><input id="e' + index +
-          '" value="' + esc((item.values || [])[0] || "") + '" class="' + (item.solved ? "is-ok" : item.last && item.last[0] && !item.last[0].ok ? "is-bad" : "") +
-          '"' + (item.solved ? " readonly" : "") + ' autocomplete="off" aria-label="Cevabın"></label>';
-        if (!item.solved) html += '<div class="actions"><button class="primary" type="submit">Kontrol et</button></div>';
-        html += feedbackHtml(item, hint, explain);
-        html += "</form>";
+      } else {
+        var hintEx = "Sık düşülen yer: " + (leaf.mistakes[0] || "Modele ve koşula yeniden bak.");
+        var explainEx = "Beraber düzeltelim. " + leaf.mistakes.join(" ") + " Kontrol cümlesi: " + exercise.answerText;
+        html += "<p>" + esc("Şimdi kalem sende. " + exercise.question) + "</p>";
+        html += blankButton(exercise.answerText, (item.values || [])[0] || "", item, "exercise", index, 0);
+        html += feedbackHtml(item, hintEx, explainEx);
       }
       html += "</li>";
     });
@@ -387,7 +381,7 @@
     } else if (isDone(saved)) {
       html += "<p>Çarpanlar ve Katlar yaprakları bitti. Diğer konular yakında.</p>";
     } else {
-      html += "<p>Sonraki yaprak, bu yaprak tamamlanınca açılır.</p>";
+      html += "<p>Bu yaprağı bitirince sonraki yaprak açılır. Acele etme.</p>";
     }
     html += "</div>";
     if (isDone(saved) && leaf.mistakes.length) {
@@ -404,22 +398,15 @@
     var reviewButton = document.getElementById("review");
     if (reviewButton) reviewButton.addEventListener("click", function () {
       review = !review;
+      closeSheet();
       render();
     });
     var seen = document.getElementById("seen");
     if (seen) seen.addEventListener("click", function () {
       saved.examplesSeen = true;
       save();
-      focusId = "e0";
       render();
-    });
-    mainEl.querySelectorAll("form").forEach(function (form) {
-      form.addEventListener("submit", function (event) {
-        event.preventDefault();
-        var index = Number(form.getAttribute("data-index"));
-        if (form.getAttribute("data-kind") === "step") submitStep(leaf, saved, index, form);
-        else submitExercise(leaf, saved, index, form);
-      });
+      reveal("adim-1");
     });
     mainEl.querySelectorAll("[data-retry]").forEach(function (button) {
       button.addEventListener("click", function () {
@@ -428,22 +415,182 @@
         saved.steps[index].wrong = 0;
         saved.steps[index].last = null;
         save();
-        focusId = "s" + index + "-0";
+        closeSheet();
         render();
       });
     });
   }
 
-  function readValues(form) {
-    return Array.prototype.map.call(form.querySelectorAll("input"), function (input) {
-      return input.value;
-    });
+  function reveal(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    var top = el.getBoundingClientRect().top - mainEl.getBoundingClientRect().top + mainEl.scrollTop - 16;
+    mainEl.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
   }
 
-  function submitStep(leaf, saved, index, form) {
+  function choicesFor(answer) {
+    if (String(answer).length > 28) return [];
+    var options = [String(answer)];
+    function add(value) {
+      if (options.length >= 4) return;
+      var text = String(value);
+      if (!text) return;
+      if (options.some(function (item) { return check.tight(item) === check.tight(text); })) return;
+      if (check.judgeBlank(text, answer).ok && check.tight(text) !== check.tight(String(answer))) return;
+      options.push(text);
+    }
+    if (/^\d+$/.test(String(answer).trim())) {
+      var n = Number(answer);
+      add(n + 1);
+      add(Math.max(0, n - 1));
+      add(n + 2);
+    } else if (String(answer).length <= 28) {
+      ["çarpanı", "katı", "bölen", "asal", "bileşik", "evet", "hayır", "doğru", "değildir", "olamaz", "kalansız", "çift", "alınmaz", "alınır", "biter", "eklenmez", "aynı"].forEach(add);
+    }
+    var seed = String(answer);
+    var hash = 0;
+    for (var i = 0; i < seed.length; i += 1) hash = (hash * 33 + seed.charCodeAt(i)) >>> 0;
+    var copy = options.slice();
+    for (var j = copy.length - 1; j > 0; j -= 1) {
+      hash = (hash * 1664525 + 1013904223) >>> 0;
+      var k = hash % (j + 1);
+      var tmp = copy[j];
+      copy[j] = copy[k];
+      copy[k] = tmp;
+    }
+    return copy;
+  }
+
+  function openSheet(leafId, kind, stepIndex, blankIndex) {
+    var leaf = leaves[leafId];
+    var saved = ensureLeaf(leafId);
+    var item = kind === "step" ? saved.steps[stepIndex] : saved.exercises[stepIndex];
+    if (!item || item.solved) return;
+    var answer = kind === "step" ? leaf.steps[stepIndex].answers[blankIndex] : leaf.exercises[stepIndex].answerText;
+    var current = (item.values || [])[blankIndex] || "";
+    sheet = { leafId: leafId, kind: kind, step: stepIndex, blank: blankIndex, answer: answer };
+    var box = document.getElementById("answer-sheet");
+    box.hidden = false;
+    document.getElementById("sheet-title").textContent = kind === "exercise" ? "Cevabın" : "Boşluk " + (blankIndex + 1);
+    document.getElementById("sheet-ask").textContent = "Yaz veya aşağıdaki seçeneklerden birine bas.";
+    document.getElementById("sheet-input").value = current;
+    var choices = document.getElementById("sheet-choices");
+    choices.innerHTML = "";
+    choicesFor(answer).forEach(function (choice) {
+      var button = document.createElement("button");
+      button.type = "button";
+      button.className = "choice";
+      button.textContent = choice;
+      button.addEventListener("click", function () {
+        document.getElementById("sheet-input").value = choice;
+        confirmSheet();
+      });
+      choices.appendChild(button);
+    });
+    var keypad = document.getElementById("sheet-keypad");
+    var showKeys = /^\d+$/.test(String(answer).trim()) || /^[\d,]+$/.test(String(answer).replace(/\s/g, ""));
+    keypad.hidden = !showKeys;
+    keypad.innerHTML = "";
+    if (showKeys) {
+      ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"].forEach(function (key) {
+        var button = document.createElement("button");
+        button.type = "button";
+        button.className = "key";
+        button.textContent = key;
+        button.addEventListener("click", function () {
+          var input = document.getElementById("sheet-input");
+          input.value += key;
+        });
+        keypad.appendChild(button);
+      });
+      if (String(answer).indexOf(",") !== -1) {
+        var comma = document.createElement("button");
+        comma.type = "button";
+        comma.className = "key";
+        comma.textContent = ",";
+        comma.addEventListener("click", function () {
+          document.getElementById("sheet-input").value += ",";
+        });
+        keypad.appendChild(comma);
+      }
+      var back = document.createElement("button");
+      back.type = "button";
+      back.className = "key";
+      back.textContent = "sil";
+      back.addEventListener("click", function () {
+        var input = document.getElementById("sheet-input");
+        input.value = input.value.slice(0, -1);
+      });
+      keypad.appendChild(back);
+    }
+    var spoken = NartesVoice.speak(leaf);
+    var note = "";
+    var tone = "";
+    if (item.wrong >= 2) {
+      note = kind === "step" ? spoken.steps[stepIndex].explain : ("Beraber düzeltelim. " + leaf.mistakes.join(" "));
+      tone = "explain";
+    } else if (item.wrong === 1) {
+      note = kind === "step" ? spoken.steps[stepIndex].hint : ("Sık düşülen yer: " + (leaf.mistakes[0] || "Modele yeniden bak."));
+      tone = "hint";
+    }
+    setSheetFeedback(note, tone);
+  }
+
+  function setSheetFeedback(message, tone) {
+    var node = document.getElementById("sheet-feedback");
+    node.className = "sheet-feedback" + (tone ? " " + tone : "");
+    node.textContent = message || "";
+  }
+
+  function closeSheet() {
+    sheet = null;
+    document.getElementById("answer-sheet").hidden = true;
+  }
+
+  function confirmSheet() {
+    if (!sheet) return;
+    var leaf = leaves[sheet.leafId];
+    var saved = ensureLeaf(sheet.leafId);
+    var draft = document.getElementById("sheet-input").value;
+    if (!String(draft || "").trim()) {
+      setSheetFeedback("Önce bir cevap yaz ya da bir seçeneğe bas.", "hint");
+      return;
+    }
+    if (sheet.kind === "exercise") {
+      gradeExercise(leaf, saved, sheet.step, draft);
+      return;
+    }
+    var count = leaf.steps[sheet.step].answers.length;
+    var values = (saved.steps[sheet.step].values || []).slice();
+    while (values.length < count) values.push("");
+    values[sheet.blank] = draft;
+    saved.steps[sheet.step].values = values;
+    var missing = -1;
+    for (var i = 0; i < values.length; i += 1) {
+      if (!String(values[i] || "").replace(/\s/g, "")) {
+        missing = i;
+        break;
+      }
+    }
+    if (missing !== -1) {
+      save();
+      var leafId = sheet.leafId;
+      var stepIndex = sheet.step;
+      render();
+      openSheet(leafId, "step", stepIndex, missing);
+      if (!document.getElementById("sheet-feedback").textContent) {
+        setSheetFeedback("Bu boşluğu aldım. Şimdi diğer boşluğu da doldur.", "hint");
+      }
+      return;
+    }
+    gradeStep(leaf, saved, sheet.step, values);
+  }
+
+  function gradeStep(leaf, saved, index, values) {
     var step = leaf.steps[index];
     var item = saved.steps[index];
-    item.values = readValues(form);
+    var spoken = NartesVoice.speak(leaf);
+    item.values = values.slice();
     var result = check.judgeAll(item.values, step.answers, { ordered: step.ordered });
     item.last = result.blanks;
     if (result.ok) {
@@ -452,43 +599,49 @@
       if (saved.steps[index + 1]) saved.steps[index + 1].unlocked = true;
       if (index === leaf.steps.length - 1) saved.examplesUnlocked = true;
       save();
-      say("Doğru. Sonraki adım açıldı.");
-      focusId = saved.steps[index + 1] ? "s" + (index + 1) + "-0" : "";
+      closeSheet();
+      say("Doğru. Sıradaki adım açıldı.");
       render();
-      var next = document.getElementById("adim-" + (index + 2));
-      if (next && next.scrollIntoView) next.scrollIntoView({ block: "nearest" });
+      reveal(index + 1 < leaf.steps.length ? "adim-" + (index + 2) : "adim-" + (index + 1));
       return;
     }
     item.wrong += 1;
     save();
-    var firstBad = result.blanks.findIndex(function (blank) { return !blank.ok; });
-    focusId = "s" + index + "-" + Math.max(0, firstBad);
-    say(item.wrong === 1 ? "İpucu. " + step.hint : "Kısa açıklama. " + step.explain);
+    var bad = result.blanks.findIndex(function (blank) { return !blank.ok; });
+    var message = item.wrong === 1 ? spoken.steps[index].hint : spoken.steps[index].explain;
+    var tone = item.wrong === 1 ? "hint" : "explain";
     render();
+    openSheet(leaf.id, "step", index, bad < 0 ? 0 : bad);
+    setSheetFeedback(message, tone);
+    window.__lastFeedback = message;
+    say(message);
   }
 
-  function submitExercise(leaf, saved, index, form) {
+  function gradeExercise(leaf, saved, index, value) {
     var exercise = leaf.exercises[index];
     var item = saved.exercises[index];
-    item.values = readValues(form);
-    var result = check.judgeBlank(item.values[0] || "", exercise.answerText, {});
+    item.values = [value];
+    var result = check.judgeBlank(value, exercise.answerText, {});
     item.last = [result];
     if (result.ok) {
       item.solved = true;
       item.wrong = 0;
       if (saved.exercises[index + 1]) saved.exercises[index + 1].unlocked = true;
       save();
-      say(isDone(saved) ? "Yaprak tamam." : "Doğru. Sonraki alıştırma açıldı.");
-      focusId = saved.exercises[index + 1] ? "e" + (index + 1) : "";
+      closeSheet();
+      say(isDone(saved) ? "Yaprak tamam. Güzel çalıştın." : "Doğru. Sonraki alıştırma açıldı.");
       render();
       return;
     }
     item.wrong += 1;
     save();
-    focusId = "e" + index;
-    var hint = leaf.mistakes[0] || "Görsel modele yeniden bak.";
-    say(item.wrong === 1 ? "İpucu. " + hint : "Kısa açıklama.");
+    var hint = "Sık düşülen yer: " + (leaf.mistakes[0] || "Modele yeniden bak.");
+    var explain = "Beraber düzeltelim. " + leaf.mistakes.join(" ") + " Kontrol cümlesi: " + exercise.answerText;
+    var message = item.wrong === 1 ? hint : explain;
     render();
+    openSheet(leaf.id, "exercise", index, 0);
+    setSheetFeedback(message, item.wrong === 1 ? "hint" : "explain");
+    say(message);
   }
 
   function onReset() {
@@ -505,8 +658,25 @@
     scrimEl.hidden = !open;
   });
   scrimEl.addEventListener("click", closeNav);
+  mainEl.addEventListener("click", function (event) {
+    var spot = event.target.closest("[data-blank]");
+    if (!spot || spot.disabled) return;
+    openSheet(route.leaf, spot.getAttribute("data-kind"), Number(spot.getAttribute("data-step")), Number(spot.getAttribute("data-slot")));
+  });
+  document.getElementById("sheet-ok").addEventListener("click", confirmSheet);
+  document.getElementById("sheet-close").addEventListener("click", closeSheet);
+  document.addEventListener("keydown", function (event) {
+    if (!sheet || document.getElementById("answer-sheet").hidden) return;
+    var input = document.getElementById("sheet-input");
+    if (event.key === "Escape") { closeSheet(); return; }
+    if (event.key === "Enter") { event.preventDefault(); confirmSheet(); return; }
+    if (document.activeElement === input) return;
+    if (/^[0-9]$/.test(event.key)) { input.value += event.key; event.preventDefault(); }
+    if (event.key === "Backspace") { input.value = input.value.slice(0, -1); event.preventDefault(); }
+  });
   window.addEventListener("hashchange", function () {
     closeNav();
+    closeSheet();
     mainEl.scrollTop = 0;
     render();
   });
