@@ -34,3 +34,14 @@ jobs:
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Set custom domain
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          repo="${{ github.repository }}"
+          if ! gh api --method PUT "repos/${repo}/pages" -f cname='nartest.problemcoz.com' -f build_type='workflow'; then
+            gh api --method PUT "repos/${repo}/pages" -f cname='nartest.problemcoz.com' -f build_type='workflow' -F https_enforced=false
+          fi
+          gh api "repos/${repo}/pages" --jq '{cname,build_type,https_enforced,html_url}'
