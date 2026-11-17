@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 184 36" width="184" height="36" fill="none">
+  <title>Nartes+</title>
+  <!-- Stylized minimal pomegranate + plus geometric emblem -->
+  <g transform="translate(2, 2)">
+    <rect x="0" y="3" width="28" height="28" rx="9" fill="#FFF7ED" stroke="#FED7AA" stroke-width="1.5"/>
+    <!-- 3-point pomegranate crown -->
+    <path d="M10.5 7.2L12.2 4.3L14 6.7L15.8 4.3L17.5 7.2" stroke="#F97316" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Pomegranate orb ring -->
+    <circle cx="14" cy="17" r="8.5" fill="#FFFFFF" stroke="#F97316" stroke-width="2"/>
+    <!-- Tactile plus sign inside (coral + emerald spark) -->
+    <path d="M14 12.6V21.4M9.6 17H18.4" stroke="#0F172A" stroke-width="2.2" stroke-linecap="round"/>
+    <circle cx="21.5" cy="9.5" r="3" fill="#16A34A" stroke="#FFFFFF" stroke-width="1.5"/>
+  </g>
+  <!-- Crisp anthracite wordmark -->
+  <text x="38" y="25" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="20" font-weight="800" letter-spacing="-0.6" fill="#0F172A">Nartes</text>
+  <text x="105" y="24.5" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="21" font-weight="900" fill="#F97316">+</text>
+</svg>

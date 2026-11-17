@@ -1,0 +1,84 @@
+{
+  "character": "Nati",
+  "brand": "Nartes+",
+  "states": {
+    "idle": {
+      "role": "Bekleme ve dinleme duruşu",
+      "motionSource": "Google Flow Veo 3.1",
+      "sourcePose": "Minimalist_sleek_3D_character_design_d2fbacb3.jpg",
+      "sourceVideo": "Character_floating_with_blinking__1704423a.mp4",
+      "files": {
+        "png": "assets/nati/nati_idle.png",
+        "jpg": "assets/nati/nati_idle.jpg",
+        "mp4": "assets/nati/nati_idle.mp4",
+        "webm": "assets/nati/nati_idle.webm",
+        "gif": "assets/nati/nati_idle.gif"
+      }
+    },
+    "talking": {
+      "role": "Sesli konuşma ve anlatım duruşu",
+      "motionSource": "Google Flow Veo 3.1",
+      "sourcePose": "Same_character_Nati_from_reference__5d5450d6.jpg",
+      "sourceVideo": "Person_speaking_with_hand_gesture_3967df6d.mp4",
+      "files": {
+        "png": "assets/nati/nati_talking.png",
+        "jpg": "assets/nati/nati_talking.jpg",
+        "mp4": "assets/nati/nati_talking.mp4",
+        "webm": "assets/nati/nati_talking.webm",
+        "gif": "assets/nati/nati_talking.gif"
+      }
+    },
+    "greeting": {
+      "role": "Karşılama ve el sallama duruşu",
+      "motionSource": "Google Flow Veo 3.1",
+      "sourcePose": "Same_character_Nati_from_reference__2f7e2691.jpg",
+      "sourceVideo": "Person_waving_and_smiling_3c11fbef.mp4",
+      "files": {
+        "png": "assets/nati/nati_greeting.png",
+        "jpg": "assets/nati/nati_greeting.jpg",
+        "mp4": "assets/nati/nati_greeting.mp4",
+        "webm": "assets/nati/nati_greeting.webm",
+        "gif": "assets/nati/nati_greeting.gif"
+      }
+    },
+    "guiding": {
+      "role": "Yönlendirme ve ipucu verme duruşu",
+      "motionSource": "Google Flow Veo 3.1",
+      "sourcePose": "Same_character_Nati_from_reference__ef702220.jpg",
+      "sourceVideo": "Hand_gesture_pointing_to_side_fff35abc.mp4",
+      "files": {
+        "png": "assets/nati/nati_guiding.png",
+        "jpg": "assets/nati/nati_guiding.jpg",
+        "mp4": "assets/nati/nati_guiding.mp4",
+        "webm": "assets/nati/nati_guiding.webm",
+        "gif": "assets/nati/nati_guiding.gif"
+      }
+    },
+    "thinking": {
+      "role": "Düşünme ve analiz duruşu",
+      "motionSource": "Google Flow Pose (cleaned 2-hand) + 24fps studio loop",
+      "sourcePose": "Same_character_Nati_from_reference__a33dbcf6.jpg",
+      "sourceVideo": null,
+      "files": {
+        "png": "assets/nati/nati_thinking.png",
+        "jpg": "assets/nati/nati_thinking.jpg",
+        "mp4": "assets/nati/nati_thinking.mp4",
+        "webm": "assets/nati/nati_thinking.webm",
+        "gif": "assets/nati/nati_thinking.gif"
+      }
+    },
+    "celebrating": {
+      "role": "Doğru cevap ve kutlama duruşu",
+      "motionSource": "Google Flow Pose + 24fps celebration loop",
+      "sourcePose": "Same_character_Nati_from_reference__2968761a.jpg",
+      "sourceVideo": null,
+      "files": {
+        "png": "assets/nati/nati_celebrating.png",
+        "jpg": "assets/nati/nati_celebrating.jpg",
+        "mp4": "assets/nati/nati_celebrating.mp4",
+        "webm": "assets/nati/nati_celebrating.webm",
+        "gif": "assets/nati/nati_celebrating.gif"
+      }
+    }
+  }
+}

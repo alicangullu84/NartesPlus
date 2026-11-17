@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="manifest.json">
+  <title>Nartes+ • 1–12. Sınıf Matematik &amp; Nati Yapay Zeka Rehberi</title>
+  <link rel="icon" type="image/svg+xml" href="assets/logos/nartes_minimal_logo.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
+  <!-- KaTeX Matematiksel Dizgi Motoru -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+  <link rel="stylesheet" href="css/style.css?v=20261117k">
+  <link rel="stylesheet" href="css/brilliant_clean.css?v=20261117k">
+</head>
+<body class="auth-locked sidebar-collapsed" data-view="path">
+
+  <!-- 0. NARTES+ MİNİMALİST TEK SÜTUNLU GİRİŞ & DENEME PORTALI -->
+  <div class="auth-gate-overlay" id="authGateOverlay">
+    <div class="auth-ambient-glow auth-glow-1" aria-hidden="true"></div>
+    <div class="auth-ambient-glow auth-glow-2" aria-hidden="true"></div>
+    <div class="auth-gate-shell auth-single-shell">
+      <div class="auth-gate-card auth-single-card">
+        <div class="auth-card-inner">
+          <div class="auth-single-head">
+            <div class="auth-single-brand">
+              <img src="assets/logos/nartes_minimal_logo.svg" alt="Nartes+" height="34">
+            </div>
+            <div class="auth-single-nati">
+              <video autoplay loop muted playsinline poster="assets/nati/nati_greeting.png" aria-label="Nati karşılama">
+                <source src="assets/nati/nati_greeting.webm" type="video/webm">
+                <source src="assets/nati/nati_greeting.mp4" type="video/mp4">
+                <img src="assets/nati/nati_greeting.png" alt="Nati">
+              </video>
+            </div>
+            <div class="auth-gate-badge" id="authGateBadge" hidden>🔒 ÖZEL YETKİLİ ERİŞİM</div>
+            <h2 class="auth-gate-title">Nartes+’a Hoş Geldin</h2>
+            <p class="auth-gate-desc" id="authGateDesc">Önce seviyeni ölçen hazır bulunuşluk testiyle kişisel deneme sürümünü başlat ya da şifrenle devam et.</p>
+          </div>
+
+          <div class="auth-trial-cta-box">
+            <button type="button" class="auth-trial-cta-btn" id="authStartTrialFlowBtn">
+              🚀 Ücretsiz Deneme Sürümü • Seviyeni Ölç ve Başla →
+            </button>
+            <span class="auth-trial-cta-sub">Sınıfına göre 6 soruluk hazır bulunuşluk testi (İşlem • Muhakeme • Modelleme)</span>
+          </div>
+
+          <div class="auth-divider"><span>veya tam erişim şifresiyle giriş yap</span></div>
+
+          <div class="auth-role-switch" role="tablist" aria-label="Giriş Türü Seçimi">
+            <button type="button" class="auth-role-btn is-active" id="authRoleStudentBtn" data-role="student" role="tab" aria-selected="true">
+              <span class="auth-role-icon" aria-hidden="true">🎓</span>
+              <span class="auth-role-texts">
+                <strong>Öğrenci</strong>
+                <small>Sıralı öğrenme yolu</small>
+              </span>
+            </button>
+            <button type="button" class="auth-role-btn" id="authRoleTeacherBtn" data-role="teacher" role="tab" aria-selected="false">
+              <span class="auth-role-icon" aria-hidden="true">👩‍🏫</span>
+              <span class="auth-role-texts">
+                <strong>Öğretmen</strong>
+                <small>Tüm adımlar açık</small>
+              </span>
+            </button>
+          </div>
+
+          <form id="authGateForm" class="auth-gate-form" autocomplete="off">
+            <div class="auth-input-wrap">
+              <span class="auth-input-icon" aria-hidden="true">🔑</span>
+              <input type="password" id="authPasswordInput" class="auth-password-input" placeholder="Erişim şifreni gir..." required autofocus>
+              <button type="button" id="authTogglePassBtn" class="auth-toggle-pass" title="Şifreyi Göster / Gizle" aria-label="Şifreyi Göster veya Gizle">👁️</button>
+            </div>
+            <label class="auth-remember-row">
+              <input type="checkbox" id="authRememberChk" checked>
+              <span>Bu cihazda oturumu açık tut</span>
+            </label>
+            <div class="auth-error-msg" id="authErrorMsg" hidden>Hatalı şifre girdiniz. Lütfen kontrol edip tekrar deneyin.</div>
+            <button type="submit" class="auth-submit-btn" id="authSubmitBtn">🎓 Öğrenci Girişi Yap ve Başla →</button>
+          </form>
+
+          <div class="auth-single-foot">
+            Nartest Yayınları • 1–12. Sınıf • Maarif Modeli + LGS &amp; YKS Hazır Bulunuşluk
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 0B. BRILLIANT STİLİ 11 ADIMLI /WELCOME + 5-6-7 TANI VE KÖPRÜ EKRANLARI -->
+  <div class="wf-overlay" id="natiWelcomeOverlay" hidden></div>
+  <div class="wf-bridge-modal" id="natiBridgeModal" hidden></div>
+  <div class="nati-calibration-overlay" id="natiCalibrationOverlay" hidden>
+    <div class="nati-cal-card">
+      <div class="nati-cal-top">
+        <span class="nati-cal-brand">Nati • Kişisel Öğrenme Rotası</span>
+        <div class="nati-cal-dots" id="calStepDots"></div>
+        <button type="button" class="nati-cal-skip" id="calSkipBtn">Şimdilik Geç</button>
+      </div>
+      <div class="nati-cal-body" id="calBody"></div>
+    </div>
+  </div>
+
+  <!-- 1. ÜST BAR (Brilliant Tarzı Sade Tek Satırlı Navigasyon) -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <div class="brand" id="brandHomeBtn" title="Nartes+ • Öğrenim Yolu">
+        <div id="brandLogoMount" class="nartes-logo-mount">
+          <img src="assets/logos/nartes_minimal_logo.svg" alt="Nartes+" height="30">
+        </div>
+      </div>
+    </div>
+
+    <nav class="topnav" aria-label="Ana Ekran Seçimi">
+      <button type="button" class="topnav-btn active" id="navViewPathBtn" title="Öğrenim Yolu">
+        <span>Öğrenim</span>
+      </button>
+      <button type="button" class="topnav-btn" id="navCoursesBtn" title="Sınıf Üniteleri ve Temel Köprüler">
+        <span id="navCoursesLabel">Üniteler</span>
+      </button>
+    </nav>
+
+    <div class="topbar-right">
+      <span class="top-pill top-trial-pill" id="topTrialBadge" hidden>✨ Deneme Sürümü</span>
+      <div class="top-pill" title="Mevcut Ünite Durak İlerlemesi">
+        <span class="dot-green"></span>
+        <span id="topProgressText">0 / 30 (%0)</span>
+      </div>
+      <button type="button" class="top-pill top-cal-btn" id="btnOpenCalibration" title="Hazır Bulunuşluk Testini Aç">
+        <span>🧭</span>
+        <span>Hazır Bulunuşluk</span>
+      </button>
+      <button type="button" class="top-pill top-voice-btn" id="btnOpenVoiceStudio" title="Nati ElevenLabs Ses Tonu Ayarları">
+        <span>🎙️</span>
+        <span>Nati Ses</span>
+      </button>
+      <button class="icon-btn" id="btnToggleSound" title="Ses Efektlerini Aç/Kapat">🔊</button>
+      <button class="icon-btn" id="btnLockApp" title="Oturumu Kilitle (Giriş Ekranına Dön)">🔒</button>
+    </div>
+
+    <!-- Eski modül uyumluluğu için gizli referans öğeleri -->
+    <div class="compat-hidden" aria-hidden="true">
+      <button id="btnToggleSidebar" type="button">Bölümler</button>
+      <button id="navViewLessonBtn" type="button">Odak Dersi</button>
+      <select id="unitQuickSelect"></select>
+      <button id="navPolypadBtn" type="button">Araçlar</button>
+      <span id="topTotalLgsText">LGS: 0 / 360</span>
+      <button id="btnFullscreen" type="button"></button>
+    </div>
+  </header>
+
+  <!-- 2. ANA UYGULAMA KABUĞU -->
+  <div class="app-shell" id="appShell">
+
+    <!-- BUGÜN & ÖĞRENME YOLU EKRANI (Brilliant.org Home & Path View) -->
+    <section class="brilliant-path-view" id="brilliantPathView" aria-label="Bugün ve Öğrenme Yolu">
+      <div class="brilliant-path-container">
+        <div class="nati-path-hero">
+          <div class="nati-path-avatar-wrap" id="natiPathHeroAvatar">
+            <video autoplay loop muted playsinline poster="assets/nati/nati_idle.png" aria-label="Nati">
+              <source src="assets/nati/nati_idle.webm" type="video/webm">
+              <source src="assets/nati/nati_idle.mp4" type="video/mp4">
+              <img src="assets/nati/nati_idle.png" alt="Nati">
+            </video>
+          </div>
+          <div class="nati-path-hero-copy">
+            <span class="nati-path-goal-badge" id="natiPathGoalBadge">GÜNLÜK HEDEF • 15 DK</span>
+            <h1 class="nati-path-hero-title" id="natiPathHeroTitle">Bugünkü Matematik Adımın Hazır</h1>
+            <p class="nati-path-hero-sub" id="natiPathHeroSub">Küçük görsel adımlarla ilerle; takıldığın yerde Nati seninle konuşarak yol gösterecek.</p>
+          </div>
+          <div class="nati-path-hero-actions">
+            <button type="button" class="nati-primary-pill-btn" id="btnContinueLesson">
+              <span>Derse Başla</span>
+              <span aria-hidden="true">→</span>
+            </button>
+            <button type="button" class="nati-ghost-pill-btn" id="btnAskNatiFromPath">
+              <span>💬 Nati'ye Sor</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="brilliant-outcome-spine" id="brilliantOutcomeSpine"></div>
+      </div>
+    </section>
+
+    <!-- ÜNİTELER & 5-6-7 TEMEL KÖPRÜLER EKRANI -->
+    <section class="brilliant-units-view" id="brilliantUnitsView" aria-label="Tüm Üniteler ve Temel Köprüler" hidden></section>
+
+    <!-- Çekmece Arka Plan Örtüsü -->
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+    <!-- SOL PANEL: 3B Kapak + Yeşil/Turuncu Kazanım Akışı -->
+    <aside class="sidebar" id="leftSidebar">
+      <div class="sidebar-hero" id="sidebarHero">
+        <div class="hero-top-row">
+          <div class="hero-grid-badge" id="heroGridBadge">
+            <span>1</span><span>2</span><span>3</span><span>4</span>
+            <span>5</span><span>6</span><span>7</span><span>8</span>
+            <span>9</span><span>10</span><span>11</span><span>12</span>
+          </div>
+          <button class="hero-switch-btn" id="btnOpenUnitsHero" title="12 Ünite Arasında Geçiş Yap">
+            12 Ünite ▾
+          </button>
+        </div>
+        <div class="hero-unit-tag" id="heroUnitTag">8. Sınıf • 1. Ünite</div>
+        <div class="hero-title" id="heroUnitTitle">Çarpanlar ve Katlar</div>
+      </div>
+
+      <div class="sidebar-legend">
+        <div class="sidebar-legend-row">
+          <div class="legend-item">
+            <span class="legend-dot green"></span>
+            <span id="legendDoneCount">0 Tamamlandı</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot orange"></span>
+            <span id="legendTodoCount">6 Kaldı</span>
+          </div>
+        </div>
+        <div class="sidebar-unit-meter" title="Ünite İlerleme Çubuğu">
+          <div class="sidebar-unit-meter-fill" id="sidebarUnitMeterFill" style="width: 0%"></div>
+        </div>
+      </div>
+
+      <!-- Dikey Bağlı Kazanım Zinciri -->
+      <div class="kazanim-list" id="kazanimList"></div>
+
+      <!-- Sol Alt Araç Çubuğu -->
+      <div class="sidebar-footer">
+        <button class="footer-action" id="btnTeacherMode" title="Öğretmen testi için kilitleri aç/kapat">
+          🔒 Sıralı Öğrenci Modu
+        </button>
+        <button class="footer-action" id="btnResetProgress" title="Bu Ünitenin İlerlemesini Sıfırla">
+          🗑️ Sıfırla
+        </button>
+      </div>
+    </aside>
+
+    <!-- SAĞ ÇALIŞMA ALANI: Orta Yatay Pencere Sahnesi + Alt 30 Duraklı Yol -->
+    <main class="workspace">
+
+      <!-- Üst Bilgi Şeridi & Segmented Kapsül İlerleme Çubuğu -->
+      <div class="workspace-header">
+        <div class="workspace-header-left">
+          <button type="button" class="lesson-back-path-btn lesson-back-btn" id="btnBackToPath" title="Öğrenme Yoluna Dön">
+            ✕ Çıkış
+          </button>
+          <span class="step-topic-title" id="stepTopicTitle"></span>
+          <div class="step-crumb">
+            <span id="crumbUnitBadge" class="crumb-unit">1. Ünite</span>
+            <span class="crumb-sep crumb-sep-kaz">›</span>
+            <span id="crumbKazanim" class="crumb-kaz">Çarpanlar ve Katlar</span>
+            <span class="crumb-sep">›</span>
+            <span id="crumbStopNo" class="crumb-stop">Durak 1 / 30</span>
+            <span class="crumb-badge type-concept" id="crumbType">💡 Örnek &amp; Keşif</span>
+          </div>
+        </div>
+
+        <div class="lesson-segmented-bar" id="lessonSegmentedBar" aria-label="Bölüm içi adım çubuğu"></div>
+
+        <div class="workspace-header-right">
+          <button type="button" class="lesson-scratchpad-btn" id="btnToggleScratchpad" title="Şeffaf Karalama Kalemini Aç / Kapat">
+            ✏️ Kalem
+          </button>
+          <button type="button" class="lesson-nati-btn" id="btnLessonAskNati" title="Nati'ye Sor">
+            <img src="assets/nati/nati_idle.png" alt="" width="20" height="20" class="lesson-nati-mini-img">
+            <span>Nati'ye Sor</span>
+          </button>
+          <div class="step-status-pill todo" id="stepStatusPill">
+            🟠 Devam Ediyor
+          </div>
+        </div>
+      </div>
+
+      <!-- ORTA SAHNE: Tam Ekran Kaplayan Sakin Odak Alanı -->
+      <div class="stage-viewport" id="stageViewport">
+
+        <!-- Şeffaf Üst Karalama Katmanı (Opsiyonel) -->
+        <div class="lesson-scratchpad-layer" id="lessonScratchpadLayer" hidden>
+          <div class="scratchpad-toolbar">
+            <span class="scratchpad-title">✏️ Karalama Alanı</span>
+            <button type="button" class="scratchpad-tool is-active" id="scratchPenBtn" title="Turuncu Kalem">Kalem</button>
+            <button type="button" class="scratchpad-tool" id="scratchEraserBtn" title="Silgi">Silgi</button>
+            <button type="button" class="scratchpad-tool" id="scratchClearBtn" title="Tahtayı Temizle">Temizle</button>
+            <button type="button" class="scratchpad-tool scratchpad-close" id="scratchCloseBtn" title="Karalama Katmanını Gizle">✕ Kapat</button>
+          </div>
+          <canvas id="lessonScratchpadCanvas"></canvas>
+        </div>
+
+        <!-- Estetik Sol Geçiş Oku (SVG Çift Katmanlı Kapsül) -->
+        <button class="nav-arrow nav-arrow-prev" id="arrowPrev" title="Önceki Durak (Sol Ok Tuşu)">
+          <span class="nav-arrow-glow"></span>
+          <svg class="nav-arrow-svg" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path class="chev-back" d="M16.5 5L9.5 12L16.5 19" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.38"/>
+            <path class="chev-main" d="M12.5 5L5.5 12L12.5 19" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="nav-arrow-label">Önceki</span>
+        </button>
+
+        <section class="window-card" id="windowCard">
+          <div class="window-head">
+            <div class="window-title-wrap">
+              <h1 id="windowTitle">Çarpanlar ve Katlar</h1>
+              <div class="window-subtitle" id="windowSubtitle">Bir tam sayıyı kalansız bölen sayıları bloklarla keşfedelim.</div>
+            </div>
+          </div>
+
+          <div class="window-body" id="windowBody"></div>
+
+          <div class="window-foot">
+            <button class="btn-secondary-prev" id="btnPrevStop" title="Önceki Durağa Dön (Sol Ok)">
+              <svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12.5 4.5L7 10l5.5 5.5"/>
+              </svg>
+              <span>Önceki Durak</span>
+            </button>
+            <div class="nati-stage-companion" id="natiStageCompanion">
+              <div class="nati-stage-avatar" id="natiStageAvatar" title="Nati'ye Danış">
+                <img src="assets/nati/nati_guiding.png" alt="Nati">
+              </div>
+              <div class="foot-feedback" id="footFeedback">
+                Sıradaki adıma geçmek için bu etkinlikte seçimi tamamla.
+              </div>
+            </div>
+            <div class="foot-actions">
+              <button class="btn-primary-next" id="btnNextStop" disabled>
+                <span>Devam Et</span>
+                <svg viewBox="0 0 20 20" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4.5 10h11M10.5 5l5 5-5 5"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Estetik Sağ Geçiş Oku (SVG Çift Katmanlı Kapsül) -->
+        <button class="nav-arrow nav-arrow-next" id="arrowNext" title="Sonraki Durak (Sağ Ok Tuşu)" disabled>
+          <span class="nav-arrow-glow"></span>
+          <svg class="nav-arrow-svg" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path class="chev-back" d="M7.5 5L14.5 12L7.5 19" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.38"/>
+            <path class="chev-main" d="M11.5 5L18.5 12L11.5 19" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="nav-arrow-label">Sonraki</span>
+        </button>
+      </div>
+
+      <!-- ALT KISIM: 30 DURAKLI GÖRSEL YOL HARİTASI -->
+      <footer class="journey-bar">
+        <div class="journey-top-meta">
+          <span class="journey-title-wrap">🛣️ <strong id="roadUnitTitleLabel">1. Ünite Yol Haritası (30 Durak)</strong> — Tamamlananlar <strong style="color:#16a34a;">Yeşil</strong>, Bekleyenler <strong style="color:#f97316;">Turuncu</strong></span>
+          <div class="journey-progress-inline" title="Bu Ünitedeki Genel İlerlemen">
+            <div class="journey-progress-track">
+              <div class="journey-progress-fill" id="roadProgressFill" style="width: 0%"></div>
+            </div>
+            <span class="journey-progress-pct" id="roadProgressPct">%0</span>
+          </div>
+          <span id="roadStatusSummary" class="journey-summary">Aktif: 1. Durak • Açık: 1/30</span>
+        </div>
+
+        <div class="journey-scroll-wrap">
+          <button class="road-scroll-btn" id="roadScrollLeft" title="Yolu Sola Kaydır" aria-label="Sola Kaydır">
+            <svg viewBox="0 0 20 20" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12.5 4.5L7 10l5.5 5.5"/>
+            </svg>
+          </button>
+          <div class="road-track-viewport" id="roadViewport">
+            <div class="road-stops" id="roadStops"></div>
+          </div>
+          <button class="road-scroll-btn" id="roadScrollRight" title="Yolu Sağa Kaydır" aria-label="Sağa Kaydır">
+            <svg viewBox="0 0 20 20" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M7.5 4.5L13 10l-5.5 5.5"/>
+            </svg>
+          </button>
+        </div>
+      </footer>
+
+    </main>
+  </div>
+
+  <!-- Sıralı İlerleme Uyarı Balonu -->
+  <div class="toast-msg" id="toastMsg"></div>
+
+  <!-- 12 Ünite LGS Kampüs Haritası & Logo Seçici Modalı -->
+  <div class="modal-backdrop" id="infoModal" hidden>
+    <div class="modal-card" id="infoModalContent"></div>
+  </div>
+
+  <script src="data/carpanlar_katlar_data.js?v=20261117k"></script>
+  <script src="data/lgs_uniteler_2_12.js?v=20261117k"></script>
+  <script src="data/tum_siniflar_mufredat.js?v=20261117k"></script>
+  <script src="data/akilli_tahta_sorular.js?v=20261117k"></script>
+  <script src="data/nati_audio_manifest.js?v=20261117k"></script>
+  <script src="js/variant_engine.js?v=20261117k"></script>
+  <script src="js/nartes_mentor.js?v=20261117k"></script>
+  <script src="js/welcome_flow.js?v=20261117k"></script>
+  <script src="js/smartboard.js?v=20261117k"></script>
+  <script src="js/app.js?v=20261117k"></script>
+</body>
+</html>
